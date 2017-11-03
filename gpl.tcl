@@ -34,8 +34,8 @@ namespace eval ::Base {
     		newNode1:object,type=::Base::Node,required
     		newNode2:object,type=::Base::Node,required} {
 			::Base::Edge create newEdge -node1 $newNode1 -node2 $newNode2 
- 			foreach edge :edges {
- 				puts "Test"
+ 			#foreach edge :edges {
+ 			#	puts "Test"
  			#	if {[edge cget -node1] == $newNode1 && [edge cget -node2] == $newNode2} {
  			#		puts "edge exists"
  			#		return $edge
@@ -43,7 +43,7 @@ namespace eval ::Base {
  			#	if {[edge cget -node1] == $newNode2 && [edge cget -node2] == $newNode1} {
  			#		puts "edge exists"
  			#		return $edge
- 			}
+ 			#}
  				
  				lappend :edges $newEdge
  			#	return $newEdge
