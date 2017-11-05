@@ -36,8 +36,8 @@ class Base:
           self.nodeCoutner = 0
           self._edges = []
       
-      def nodes(self):
-          return self._nodes
+      def nodeID(self, node):
+          return self._nodes.get(node)
       
       def edges(self):
           return self._edges
@@ -74,10 +74,10 @@ class Base:
       DOTstring = 'graph g{\nnode[label=""]; \n'
       #add every edge
       for edge in graph.edges():
-          DOTstring += str(graph.nodes()[edge.node1()]) + " -- " + str(graph.nodes()[edge.node2()]) + "\n"
+          DOTstring += str(graph.nodeID(edge.node1())) + " -- " + str(graph.nodeID(edge.node2())) + "\n"
       #finish graph
       DOTstring += "}"
-      print(DOTstring)
+      return DOTstring
       
   # 
   # ---------------%<------------------
@@ -132,12 +132,19 @@ class Test(unittest.TestCase):
       G.add(n5, n6)
       G.add(n5, n7)
       G.add(n5, n8)
-      B.DOTprint(G)
-      pass
-  
+      
+      print(B.DOTprint(G))
+      self.assertEqual(B.DOTprint(G), "graph g{\nnode[label=\"\"]; \n" \
+                       "0 -- 1\n" \
+                       "0 -- 2\n" \
+                       "0 -- 3\n" \
+                       "0 -- 4\n" \
+                       "4 -- 5\n" \
+                       "4 -- 6\n" \
+                       "4 -- 7\n" \
+                       "}")
       # ---------------%<------------------
       # End of my tests
       #    
-
 if __name__ == '__main__':
     unittest.main()
