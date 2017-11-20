@@ -500,6 +500,7 @@ class Test(unittest.TestCase):
       G = Base.Graph(representation = Base.NEIGHBOUR)
       with self.assertRaises(TypeError):
           G.add(2, "3")
+          
       # ---------------%<------------------
       # End of my tests
       #    
