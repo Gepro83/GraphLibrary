@@ -15,6 +15,10 @@ class Base():
   #
   # Begin of my implementation
   # ---------------%<------------------
+          # "Constants"
+  NEIGHBOUR = "neighbour"
+  EDGE = "edge"
+  DEFAULT_WEIGHT = 0
   
   class Node:
       def __init__(self):
@@ -30,131 +34,195 @@ class Base():
           self._neighbours.extend(neighbours)
           
   class Neighbour:
-      def __init__(self, opposite, weight = None):
+      def __init__(self, opposite):
           self._opposite = opposite
-          self._weight = weight
           
       def opposite(self):
           return self._opposite
+      
+  class WeightedNeighbour(Neighbour):
+      def __init__(self, opposite, weight = None):
+          super().__init__(opposite)
+          if weight == None:
+              self._weight = Base.DEFAULT_WEIGHT
+          else:
+              self._weight = weight                  
+          
       def weight(self):
           return self._weight
       
   class Edge:
-      def __init__(self, node1, node2, weight = None):
+      def __init__(self, node1, node2):
           self._node1 = node1
           self._node2 = node2
-          self._weight = weight
           
       def node1(self):
           return self._node1
       def node2(self):
           return self._node2
+      
+  class WeightedEdge(Edge):
+      def __init__(self, node1, node2, weight = None):
+          super().__init__(node1, node2)
+          if weight == None:
+              self._weight = Base.DEFAULT_WEIGHT
+          else:
+              self._weight = weight
+          
       def weight(self):
           return self._weight
-
+          
   class Graph():
-        # "Constants"
-      NEIGHBOUR = "neighbour"
-      EDGE = "edge"
-      DEFAULT_WEIGHT = 0
       
-      def __init__(self, directed = False, representation = None, weighted = False):
-          if representation == None:
-              representation = Base.Graph.EDGE
-          self._directed = directed
-          self._representation = representation
-          self._weighted = weighted
-          self._nodes = {}
-          self._nodeCoutner = 0
-          if self._representation == Base.Graph.EDGE:  
-                self._edges = []
+      def __init__(self, directed = False, representation = None, weighted = False, printable = True):
+          #Edge representation is the default
+          if (representation == None) or (representation != Base.NEIGHBOUR):
+              self._representation = Base.EDGE
+              self._edges = []
+          else:
+              self._representation = representation
+          #default is undirected 
+          if directed == True:
+              self._directed = True
+          else:
+              self._directed = False
+          #default is unweighted
+          if weighted == True:
+              self._weighted = True
+          else:
+              self._weighted = False
+          #default is printable
+          if printable == False:
+              self._printable = False
+          else:
+              self._printable = True
+          self._nodes = []
+                
       
       def nodeID(self, node):
-          return self._nodes.get(node)
+          return self._nodes.index(node)
       
       def edges(self):
-          if self._representation == Base.Graph.EDGE:
+          if self._representation == Base.EDGE:
               return self._edges
           else:
               return None
+          
+      def nodes(self):
+          return self._nodes
+                    
+      def representation(self):
+          return self._representation
+      
+      def directed(self):
+          return self._directed
+      
+      def weighted(self):
+          return self._weighted
+      
+      def printable(self):
+          return self._printable
       
       #add an edge
-      #in digraphs the direction is from newNode1 to newNode2
+      #in digraphs the direction is from m to n
       #if no weight is given in a weighted graph DEFAULT_WEIGHT is used as a default value
       #only non-negative weights are allowed, negative weights will be corrected to the default
-      def add(self, newNode1, newNode2, weight = None):
+      def add(self, m, n, weight = None):
           if self._weighted == True:
               if weight == None:
-                  weight = Base.Graph.DEFAULT_WEIGHT
+                  weight = Base.DEFAULT_WEIGHT
               if weight < 0:
-                  weight = Base.Graph.DEFAULT_WEIGHT
+                  weight = Base.DEFAULT_WEIGHT
           
           #use different method for neighbour representation
-          if self._representation == Base.Graph.NEIGHBOUR:
-                    return self._neighbourAdd(newNode1, newNode2, weight)
+          if self._representation == Base.NEIGHBOUR:
+                    return self._addNeighbourEdge(m, n, weight)
           # check if edge already exists
           for edge in self._edges:
-              if edge.node1() is newNode1 and edge.node2() is newNode2:
+              if edge.node1() is m and edge.node2() is n:
                   return edge
               if not self._directed:
-                  if edge.node1() is newNode2 and edge.node2() is newNode1:
+                  if edge.node1() is n and edge.node2() is m:
                       return edge
               
           #add the new edge
-          e = Base.Edge(newNode1, newNode2, weight)
+          if self._weighted:
+              e = Base.WeightedEdge(m, n, weight)
+          else:
+              e = Base.Edge(m, n)
           self._edges.append(e)              
           #add nodes
-          self._addNode(newNode1)
-          self._addNode(newNode2)
+          self._addNode(m)
+          self._addNode(n)
           return e
       
       #"private" method for adding edges in neighbour representation
-      def _neighbourAdd(self, newNode1, newNode2, weight):
+      def _addNeighbourEdge(self, m, n, weight):
+          #check if the object has an attribute called neighbours
+          #(intentionally no Base.Node type check to make library more flexible)
+          if not hasattr(m, "neighbours") or not hasattr(n, "neighbours"):
+              raise TypeError("Expected a Node object")
           #check if edge already exists
-          for node in self._nodes.keys():
-              if node is newNode1:
-                  for neighbour in node.neighbours():
-                      if neighbour.opposite() is newNode2:
-                          return neighbour
+          for neighbour in m.neighbours():
+              if neighbour.opposite() is n:
+                  self._addNode(m)
+                  self._addNode(n)
+                  return neighbour
           
           #add nodes
-          self._addNode(newNode1)
-          self._addNode(newNode2)
-          #add neighbours    
-          node1neighbour = Base.Neighbour(newNode2, weight)
-          newNode1.addNeighbour(node1neighbour)
-          if not self._directed: 
-              node2neighbour = Base.Neighbour(newNode1, weight)
-              newNode2.addNeighbour(node2neighbour)
+          self._addNode(m)
+          self._addNode(n)
+          #add neighbours
+          mNeighbour = self._addNeighbour(m, n, weight)
               
-          return node1neighbour
-      
+          if not self._directed:
+              self._addNeighbour(n, m, weight)
+              
+          return mNeighbour
+        
       def _addNode(self, node):
           #only add nodes that do not exist in the graph yet
           if node not in self._nodes:
-              self._nodes[node] = self._nodeCoutner
-              self._nodeCoutner += 1
+              self._nodes.append(node)
+      
+      #adds the correct type of neighbour object to the node
+      def _addNeighbour(self, m, n, weight = None):
+          #check if the object has a function to add neighbours 
+          #(intentionally no Base.Node type check to make library more flexible)
+          addNeighbourFunc = getattr(m, "addNeighbour", None)
+          if not callable(addNeighbourFunc):
+              raise TypeError("Expected a Node object")
+              
+          if self._weighted:
+              mNeighbour = Base.WeightedNeighbour(n, weight)
+              m.addNeighbour(mNeighbour)
+          else:
+              mNeighbour = Base.Neighbour(n)
+              m.addNeighbour(mNeighbour)
+          return mNeighbour
       
       def size(self):
           return len(self._nodes)
       
       def numEdges(self):
-          if self._representation == Base.Graph.EDGE:
+          if self._representation == Base.EDGE:
               return len(self._edges)
           else:
               return None
   
       #DOT pretty printer
       def DOTprint(self):
+          if not self._printable:
+              return ""
           #start a graph
           if self._directed:
               DOTstring = 'digraph g{\nnode[label=""]; \n'
           else:
               DOTstring = 'graph g{\nnode[label=""]; \n'
          
-          if self._representation == Base.Graph.EDGE:
+          if self._representation == Base.EDGE:
               DOTstring += self._DOTedges()
-          elif self._representation == Base.Graph.NEIGHBOUR:
+          elif self._representation == Base.NEIGHBOUR:
               DOTstring += self._DOTneighbour()
           #finish graph
           DOTstring += "}"
@@ -165,28 +233,34 @@ class Base():
           DOTstring = ""
           #add every edge
           for edge in self._edges:
-              if self._directed:
+              if self._weighted:
                   DOTstring += self._singleDOTedge(edge.node1(), edge.node2(), edge.weight())
               else:
-                  DOTstring += self._singleDOTedge(edge.node1(), edge.node2(), edge.weight())
+                  DOTstring += self._singleDOTedge(edge.node1(), edge.node2())
           return DOTstring
       
       #returns a string containing dot syntax of the edges in neighbour representation
       def _DOTneighbour(self):
           DOTstring = ""
           visited = []
-          for node in self._nodes.keys():
+          for node in self._nodes:
               if self._directed:
                   for neighbour in node.neighbours():
-                      DOTstring += self._singleDOTedge(
+                      if self._weighted:
+                          DOTstring += self._singleDOTedge(
                               node, neighbour.opposite(), neighbour.weight())
+                      else:
+                          DOTstring += self._singleDOTedge(node, neighbour.opposite())
                       
               else:
                   for neighbour in node.neighbours():
                       if neighbour.opposite() in visited:
                           continue
-                      DOTstring += self._singleDOTedge(
+                      if self._weighted:
+                          DOTstring += self._singleDOTedge(
                               node, neighbour.opposite(), neighbour.weight())
+                      else:
+                          DOTstring += self._singleDOTedge(node, neighbour.opposite())
 
               visited.append(node)
               
@@ -196,13 +270,13 @@ class Base():
       #followed by a linebreak
       #a value for weight is expected for weighted graphs
       def _singleDOTedge(self, node1, node2, weight = None):
-          edgeString = ""
+          edgeString = str(self.nodeID(node1))
           if self._directed:
-              edgeString = (str(self.nodeID(node1)) + " -> " + 
-                            str(self.nodeID(node2)))
+               edgeString += " -> " 
           else:
-              edgeString = (str(self.nodeID(node1)) + " -- " + 
-                            str(self.nodeID(node2)))
+              edgeString += " -- "
+          edgeString += str(self.nodeID(node2))
+          
           if self._weighted:
               edgeString += (" [ label = \"" + str(weight) + "\" ];")
           
@@ -272,6 +346,18 @@ class Test(unittest.TestCase):
                        "4 -- 7\n" \
                        "}")
                   
+      #test withour pretty printing
+      G = Base.Graph(printable = False)
+      G.add(n1, n2)
+      G.add(n1, n3)
+      G.add(n1, n4)
+      G.add(n1, n5)
+      G.add(n5, n6)
+      G.add(n5, n7)
+      G.add(n5, n8)
+      self.assertEqual(G.size(), 8)
+      self.assertEqual(G.numEdges(), 7)
+      
       #test directed graphs 
       G = Base.Graph(directed = True)
       e1 = G.add(n1, n2)
@@ -303,7 +389,7 @@ class Test(unittest.TestCase):
       del G, n1, n2, n3, n4, n5, n6, n7, n8
       n1, n2, n3, n4, n5, n6, n7, n8 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
       
-      G = Base.Graph(directed = True, representation = Base.Graph.NEIGHBOUR)
+      G = Base.Graph(directed = True, representation = Base.NEIGHBOUR)
       e1 = G.add(n1, n2)
       e2 = G.add(n1, n2)
       self.assertEqual(e1 is e2, True)
@@ -312,7 +398,7 @@ class Test(unittest.TestCase):
       del n1, n2
       n1, n2 = Base.Node(), Base.Node()
 
-      G = Base.Graph(directed = True, representation = Base.Graph.NEIGHBOUR)
+      G = Base.Graph(directed = True, representation = Base.NEIGHBOUR)
       G.add(n1, n2)
       G.add(n2, n3)
       G.add(n2, n4)
@@ -334,7 +420,7 @@ class Test(unittest.TestCase):
       del G, n1, n2, n3, n4, n5, n6, n7, n8
       n1, n2, n3, n4, n5, n6, n7, n8 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
           
-      G = Base.Graph(directed = False, representation = Base.Graph.NEIGHBOUR)
+      G = Base.Graph(directed = False, representation = Base.NEIGHBOUR)
       G.add(n1, n2)
       G.add(n2, n3)
       G.add(n2, n4)
@@ -356,7 +442,7 @@ class Test(unittest.TestCase):
       del G, n1, n2, n3, n4, n5, n6, n7, n8
       n1, n2, n3, n4, n5, n6, n7, n8 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
 
-      G = Base.Graph(directed = False, representation = Base.Graph.NEIGHBOUR, weighted = True)
+      G = Base.Graph(directed = False, representation = Base.NEIGHBOUR, weighted = True)
       G.add(n1, n2, 1)
       G.add(n1, n3, 4)
       G.add(n1, n4, 5)
@@ -378,7 +464,7 @@ class Test(unittest.TestCase):
       del G, n1, n2, n3, n4, n5, n6, n7, n8
       n1, n2, n3, n4, n5, n6, n7, n8 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
 
-      G = Base.Graph(directed = True, representation = Base.Graph.EDGE, weighted = True)
+      G = Base.Graph(directed = True, representation = Base.EDGE, weighted = True)
       G.add(n1, n2, 1)
       G.add(n2, n3, 4)
       G.add(n2, n4, 5)
@@ -396,6 +482,24 @@ class Test(unittest.TestCase):
                "4 -> 6 [ label = \"2\" ];\n" \
                "4 -> 7 [ label = \"7\" ];\n" \
                "}")
+                  
+      #test unprintable graph
+      del G, n1, n2
+      n1, n2 = Base.Node(), Base.Node()
+      
+      G = Base.Graph(directed = True, representation = Base.EDGE, weighted = True, printable = False)
+      G.add(n1, n2, 4)
+      self.assertEqual(G.DOTprint(), "")
+      
+      #test wrong parameters
+      G = Base.Graph(directed = "a", representation = 37, weighted = 2, printable = "b")
+      self.assertEqual(G.representation(), Base.EDGE)
+      self.assertEqual(G.directed(), False)
+      self.assertEqual(G.weighted(), False)
+      self.assertEqual(G.printable(), True)
+      G = Base.Graph(representation = Base.NEIGHBOUR)
+      with self.assertRaises(TypeError):
+          G.add(2, "3")
       # ---------------%<------------------
       # End of my tests
       #    

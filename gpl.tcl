@@ -54,17 +54,36 @@ namespace eval ::Base {
     nx::Class create Graph {
     	:property -accessor public {edges:0..* {}}
    	    :property -accessor public {nodes:0..* {}}
-    	:property {directed:boolean false}
-    	:property {weighted:boolean false}
-    	#NOT WORKING WHY? :(
+    	:property {directed:boolean false} {
+			:public object method value=set {obj prop value} {
+				if {![$obj eval [list info exists :$prop]]} {
+					set r [next]
+				} else {
+					set [:value=get $obj $prop]
+				}
+				return $r
+				}
+		}
+    	:property {weighted:boolean false} {
+			:public object method value=set {obj prop value} {
+				if {![$obj eval [list info exists :$prop]]} {
+					set r [next]
+				} else {
+					set [:value=get $obj $prop]
+				}
+				return $r
+				}
+		}
     	:property -accessor public {printable:boolean true} {
-		:public object method value=set {obj prop value} {
-			set r [next]
-			:public object method value=set {obj prop value} {:value=get $obj $prop}
-			return $r
+			:public object method value=set {obj prop value} {
+				if {![$obj eval [list info exists :$prop]]} {
+					set r [next]
+				} else {
+					set [:value=get $obj $prop]
+				}
+				return $r
+			}
 		}
-		}
-    	
     	:property -accessor public [list representation:representations $Base::EDGE] {
     		:object method type=representations {prop value} {
 	    		set validOpts [list $::Base::NEIGHBOUR $::Base::EDGE]
@@ -72,6 +91,14 @@ namespace eval ::Base {
 	    			return -code error "'$value' is not a valid for '[namespace tail [self]]', available are: ::Base::NEIGHBOUR, ::Base::EDGE"
 	    		}
 	    		return
+			}
+			:public object method value=set {obj prop value} {
+				if {![$obj eval [list info exists :$prop]]} {
+					set r [next]
+				} else {
+					set [:value=get $obj $prop]
+				}
+				return $r
 			}
 		} 
     	
@@ -107,7 +134,7 @@ namespace eval ::Base {
 			}
 			#use different method for neighbour representation
 			if {${:representation} eq $::Base::NEIGHBOUR} {
-				return [: -local neighbourAdd $m $n $weight]
+				return [: -local addNeighbourEdge $m $n $weight]
 			}
 			#check for double edges
 			foreach edge ${:edges} {
@@ -141,7 +168,7 @@ namespace eval ::Base {
  			}
  		}
  		
- 		:private method neighbourAdd {
+ 		:private method addNeighbourEdge {
  			m:object,type=::Base::Node,required
     		n:object,type=::Base::Node,required
     		{weight:double,substdefault $::Base::DEFAULT_WEIGHT} 
@@ -157,15 +184,15 @@ namespace eval ::Base {
     		: -local addNode $m
     		: -local addNode $n
     		#add neighbours
-    		set mNeighbour [: -local appendNeighbour $m $n $weight]
+    		set mNeighbour [: -local addNeighbour $m $n $weight]
     		if {!${:directed}} {
-    			: -local appendNeighbour $n $m $weight
+    			: -local addNeighbour $n $m $weight
     		}
     		return $mNeighbour
     	}
     	
     	#adds the correct type of neighbour object to the node
-    	:private method appendNeighbour {
+    	:private method addNeighbour {
  			m:object,type=::Base::Node,required
     		n:object,type=::Base::Node,required
     		{weight:double,substdefault $::Base::DEFAULT_WEIGHT} 
@@ -536,7 +563,6 @@ node[label=""];
     	$G add $n2 $n3
     	$G DOTprint
 	} -result {}
-	
     # ---------------%<------------------
     # End of my tests
     #    
