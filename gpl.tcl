@@ -54,7 +54,7 @@ namespace eval ::Base {
     nx::Class create Graph {
     	:property -accessor public {edges:0..* {}}
    	    :property -accessor public {nodes:0..* {}}
-    	:property {directed:boolean false} {
+    	:property -accessor public {directed:boolean false} {
 			:public object method value=set {obj prop value} {
 				if {![$obj eval [list info exists :$prop]]} {
 					set r [next]
@@ -64,7 +64,7 @@ namespace eval ::Base {
 				return $r
 				}
 		}
-    	:property {weighted:boolean false} {
+    	:property -accessor public {weighted:boolean false} {
 			:public object method value=set {obj prop value} {
 				if {![$obj eval [list info exists :$prop]]} {
 					set r [next]
@@ -567,12 +567,11 @@ node[label=""];
 	#setter/getters not working
 	test setfixedParams {} -body {
 		set G [::Base::Graph new -directed true -representation $::Base::NEIGHBOUR -weighted true -printable true]
-		puts [$G directed get]
 		set result [$G directed set false]
 		append result [$G representation set $::Base::EDGE]
 		append result [$G weighted set false]
 		append result [$G printable set false]
-	} -result {[append true $::Base::NEIGHBOUR true true]}
+	} -result [string cat true $::Base::NEIGHBOUR true true]
     # ---------------%<------------------
     # End of my tests
     #    
