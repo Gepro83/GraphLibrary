@@ -59,7 +59,7 @@ namespace eval ::Base {
 				if {![$obj eval [list info exists :$prop]]} {
 					set r [next]
 				} else {
-					set [:value=get $obj $prop]
+					set r [:value=get $obj $prop]
 				}
 				return $r
 				}
@@ -69,7 +69,7 @@ namespace eval ::Base {
 				if {![$obj eval [list info exists :$prop]]} {
 					set r [next]
 				} else {
-					set [:value=get $obj $prop]
+					set r [:value=get $obj $prop]
 				}
 				return $r
 				}
@@ -79,7 +79,7 @@ namespace eval ::Base {
 				if {![$obj eval [list info exists :$prop]]} {
 					set r [next]
 				} else {
-					set [:value=get $obj $prop]
+					set r [:value=get $obj $prop]
 				}
 				return $r
 			}
@@ -96,7 +96,7 @@ namespace eval ::Base {
 				if {![$obj eval [list info exists :$prop]]} {
 					set r [next]
 				} else {
-					set [:value=get $obj $prop]
+					set r [:value=get $obj $prop]
 				}
 				return $r
 			}
@@ -564,7 +564,15 @@ node[label=""];
     	$G DOTprint
 	} -result {}
 	
-	
+	#setter/getters not working
+	test setfixedParams {} -body {
+		set G [::Base::Graph new -directed true -representation $::Base::NEIGHBOUR -weighted true -printable true]
+		puts [$G directed get]
+		set result [$G directed set false]
+		append result [$G representation set $::Base::EDGE]
+		append result [$G weighted set false]
+		append result [$G printable set false]
+	} -result {[append true $::Base::NEIGHBOUR true true]}
     # ---------------%<------------------
     # End of my tests
     #    
