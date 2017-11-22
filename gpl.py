@@ -94,6 +94,7 @@ class Base():
           #default is printable
           if printable == False:
               self._printable = False
+              self.DOTprint = None
           else:
               self._printable = True
           self._nodes = []
@@ -212,8 +213,6 @@ class Base():
   
       #DOT pretty printer
       def DOTprint(self):
-          if not self._printable:
-              return ""
           #start a graph
           if self._directed:
               DOTstring = 'digraph g{\nnode[label=""]; \n'
@@ -489,7 +488,7 @@ class Test(unittest.TestCase):
       
       G = Base.Graph(directed = True, representation = Base.EDGE, weighted = True, printable = False)
       G.add(n1, n2, 4)
-      self.assertEqual(G.DOTprint(), "")
+      self.assertEqual(hasattr(G, "DOTprint"), False)
       
       #test wrong parameters
       G = Base.Graph(directed = "a", representation = 37, weighted = 2, printable = "b")
