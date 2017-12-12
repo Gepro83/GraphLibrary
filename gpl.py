@@ -9,8 +9,12 @@
 # Prerequisites
 #
 
+
 import unittest
 import queue
+from operator import methodcaller
+import copy
+import math
 
 class Base():
   #
@@ -105,6 +109,16 @@ class Base():
                     return True
                 else:
                     return False
+        #returns a list of all items in the stack
+        def all(self):
+            if self._traversal == Base.Graph.BFS:
+                cp = copy.copy(self._queue)
+                lst = list()
+                while not cp.empty():
+                    lst.append(cp.get())
+                return lst
+            else:
+                return list(self._stack)
 
     class Graph():
         # "Constants"
@@ -113,29 +127,18 @@ class Base():
         BFS = "bfs"
         DFS = "dfs"
 
-        def __init__(self, directed = False, representation = None, weighted = False, printable = True, traversal = None):
+        def __init__(self, directed: bool = False, representation = None, weighted: bool = False, printable: bool = True, traversal = None, MST: bool = False, SSSP: bool = False):
             #Edge representation is the default
             if (representation == None) or (representation != Base.Graph.NEIGHBOUR):
                 self._representation = Base.Graph.EDGE
                 self._edges = []
             else:
                 self._representation = representation
-            #default is undirected 
-            if directed == True:
-                self._directed = True
-            else:
-                self._directed = False
-            #default is unweighted
-            if weighted == True:
-                self._weighted = True
-            else:
-                self._weighted = False
-            #default is printable
-            if printable == False:
-                self._printable = False
-                self.DOTprint = None
-            else:
-                self._printable = True
+            
+            self._directed = directed
+            self._weighted = weighted
+            self._printable = printable
+
             #default is not traversable
             if traversal == Base.Graph.BFS:
                 self._traversal = Base.Graph.BFS
@@ -143,7 +146,22 @@ class Base():
                 self._traversal = Base.Graph.DFS
             else:
                 self._traversal = None
+
+            #defaul is False
+            if MST == True:
+                if not self._weighted or self._directed:
+                    raise Base.GraphException('MST only available for undirected, weighted graphs!')
+                self._MST = True
+            else:
+                self._MST = False
             self._nodes = []                    
+            #defazlt uis False
+            if SSSP == True:
+                if not self._weighted or not self._directed:
+                    raise Base.GraphException('SSSP only available for directed, weighted graphs!')
+                self._SSSP = True
+            else:
+                self._SSSP = False
         
         def nodeID(self, node):
             return self._nodes.index(node)
@@ -151,9 +169,44 @@ class Base():
         def edges(self):
             if self._representation == Base.Graph.EDGE:
                 return self._edges
-            else:
+            elif self._representation == Base.Graph.NEIGHBOUR:
+                edges = list()
+                visited = list()    
+                for node in self._nodes:
+                    for neighbour in node.neighbours():
+                        if neighbour.opposite() in visited: continue
+                        if self._weighted:
+                            newEdge = Base.WeightedEdge(node, neighbour.opposite(), neighbour.weight())
+                        else:
+                            newEdge = Base.Edge(node, neighbour.opposite())
+                        edges.append(newEdge)
+                        if not self._directed: visited.append(node)
+                return edges
+
+        #returns an edge object (the internal object if the graph-representatio is an edge-list) between node1 and node2, None if it does not exist
+        def edge(self, node1, node2):
+            if node1 not in self._nodes or node2 not in self._nodes:
                 return None
-            
+            if self._representation == Base.Graph.NEIGHBOUR:
+                for neighbour in node1.neighbours():
+                    if neighbour.opposite() is node2:
+                        if self._weighted:
+                            return Base.WeightedEdge(node1, neighbour.opposite(), neighbour.weight())
+                        else:
+                            return Base.Edge(node1, neighbour.opposite())
+                return None
+            elif self._representation == Base.Graph.EDGE:
+                for edge in self._edges:
+                    if edge.node1() is node1 and edge.node2() is node2:
+                        return edge
+                    if not self._directed:
+                        if edge.node1() is node2 and edge.node2() is node1:
+                            return edge
+                return None
+            else:
+                raise Base.GraphException('Unknown representation!')
+
+
         def nodes(self):
             return self._nodes
                         
@@ -271,6 +324,9 @@ class Base():
 
         #DOT pretty printer
         def DOTprint(self):
+            if not self._printable:
+                raise Base.GraphException('Unprintable graph!')
+
             #start a graph
             if self._directed:
                 DOTstring = 'digraph g{\nnode[label=""]; \n'
@@ -359,12 +415,11 @@ class Base():
                 node = store.get()
                 if node is goalNode:
                     return True
-
+                
                 for neighbour in self.getNeighbourhood(node):
                     if neighbour not in visited:
                         store.add(neighbour)
                         visited.append(neighbour)
-
             return False
 
         #returns a list of all nodes that are adjacent to node
@@ -377,8 +432,10 @@ class Base():
                 for edge in self._edges:
                     if edge.node1() is node:
                         neighbourhood.append(edge.node2())    
-                    elif edge.node2 is node:
-                        neighbourhood.append(edge.node1())
+                    elif edge.node2() is node:
+                        #directed edges point from node1 to node2
+                        if not self._directed:
+                            neighbourhood.append(edge.node1())
 
             elif self._representation == Base.Graph.NEIGHBOUR:
                 for neighbour in node.neighbours():
@@ -386,7 +443,108 @@ class Base():
             else:
                 raise Base.GraphException('Unknown edge representation!')
             return neighbourhood
+
+        #returns a Graph object containing the minimum spanning tree of this object, will throw an exception if Graphtype is wrong             
+        def MST(self):
+            if self._MST:
+                alg = Base.MST(self)
+                return alg.execute()
+            else:
+                raise Base.GraphException('MST disabled for this graph!')
+
+        #returns a Graph object containing a directed tree rooted at the startnode. The edges represent the shortest path between the source and each node (weights stay the same)
+        def SSSP(self, source):
+            if self._SSSP:
+                alg = Base.SSSP(self)
+                return alg.execute(source)
+            else:
+                raise Base.GraphException('SSSP disabled for this graph!')
             
+    #class for the MST algorithm, uses kruskals algorithm 
+    class MST:
+        def __init__(self, graph):
+            if graph.directed() or not graph.weighted():
+                raise Base.GraphException('MST works only for undirected weighted graphs')
+            self._graph = graph
+            self._parent = dict()
+            self._rank = dict()
+
+        def _makeSet(self, node):
+            self._parent[node] = node
+            self._rank[node] = 0
+
+        def _find(self, node):
+            if self._parent[node] != node:
+                self._parent[node] = self._find(self._parent[node])
+            return self._parent[node]
+
+        def _union(self, node1, node2):
+            root1 = self._find(node1)
+            root2 = self._find(node2)
+
+            if root1 == root2:
+                return
+                
+            if self._rank[root1] < self._rank[root2]:
+                self._parent[root1] = root2
+            elif self._rank[root1] > self._rank[root2]:
+                self._parent[root2] = root1
+            else:
+                self._parent[root2] = root1
+                self._rank[root1] += 1 
+
+        def execute(self):
+            for node in self._graph.nodes():
+                self._makeSet(node)
+            mst = Base.Graph(directed = False, weighted = True, traversal = Base.Graph.DFS)
+            edges = sorted(self._graph.edges(), key=methodcaller('weight'))
+            for edge in edges:
+                if self._find(edge.node1()) is not self._find(edge.node2()):
+                    self._union(edge.node1(), edge.node2())
+                    mst.add(edge.node1(), edge.node2(), edge.weight())
+            return mst
+
+    #class for SSSP, uses Dijkstras algorithm
+    class SSSP:
+        def __init__(self, graph):
+            if not graph.directed() or not graph.weighted():
+                raise Base.GraphException('SSSP works only for directed, weighted graphs')
+            self._graph = graph
+
+        def execute(self, source):
+            #Dijkstra
+            dist = dict()
+            prev = dict()
+            Q = list()
+
+            for node in self._graph.nodes():
+                dist[node] = math.inf
+                prev[node] = None
+                Q.append(node)
+
+            dist[source] = 0
+
+            while len(Q) != 0:
+                node = min(Q, key=dist.get)
+                Q.remove(node)
+
+                for neighbour in self._graph.getNeighbourhood(node):
+                    wEdge = self._graph.edge(node, neighbour)
+                    alt = dist[node] + wEdge.weight()
+                    if alt < dist[neighbour]:
+                        dist[neighbour] = alt
+                        prev[neighbour] = node
+
+            #Create graph from dist and prev
+            G = Base.Graph(directed = True, weighted = True, traversal = Base.Graph.DFS)
+            for node, prev in prev.items():
+                if prev == None: continue
+                wEdge = self._graph.edge(prev, node)
+                G.add(wEdge.node1(), wEdge.node2(), wEdge.weight())
+
+            return G
+
+
   # 
   # ---------------%<------------------
   # End of my implementation
@@ -604,19 +762,7 @@ class Test(unittest.TestCase):
       
       G = Base.Graph(directed = True, representation = Base.Graph.EDGE, weighted = True, printable = False)
       G.add(n1, n2, 4)
-      self.assertEqual(callable(getattr(G, "DOTprint", None)), False)
-
-    def test_wrongParams(self):
-      #test wrong parameters
-      G = Base.Graph(directed = "a", representation = 37, weighted = 2, printable = "b")
-      self.assertEqual(G.representation(), Base.Graph.EDGE)
-      self.assertEqual(G.directed(), False)
-      self.assertEqual(G.weighted(), False)
-      self.assertEqual(G.printable(), True)
-      G = Base.Graph(representation = Base.Graph.NEIGHBOUR)
-      with self.assertRaises(TypeError):
-          G.add(2, "3")
-
+      self.assertRaises(Base.GraphException, G.DOTprint)
           
     def test_numEdges(self):
         G = Base.Graph(directed = True, representation = Base.Graph.NEIGHBOUR)
@@ -693,8 +839,10 @@ class Test(unittest.TestCase):
         G.add(n4, n5)
         G.add(n4, n6)
         G.add(n4, n7)
+        G.add(n7, n3)
         G.add(n7, n8)
         G.add(n9, n9)
+
         #test search
         self.assertEqual(G.search(n1, n4), True)
         self.assertEqual(G.search(n3, n1), False)
@@ -718,8 +866,8 @@ class Test(unittest.TestCase):
         n1, n2, n3, n4, n5, n6, n7, n8, n9 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
         G.add(n1, n2)
         G.add(n1, n3)
-        G.add(n2, n4)
         G.add(n4, n5)
+        G.add(n2, n4)
         G.add(n4, n6)
         G.add(n4, n7)
         G.add(n7, n8)
@@ -743,8 +891,159 @@ class Test(unittest.TestCase):
         self.assertEqual(G.search(n1, n9), False)
         self.assertEqual(G.search(n9, n9), True)
 
+    def test_sorted(self):
+        n = Base.Node()
+        l = [ Base.WeightedEdge(n, n, 3), Base.WeightedEdge(n, n, 2), Base.WeightedEdge(n, n, 5)] 
+        l2 = sorted(l, key=methodcaller('weight'))
+        for e in l2:
+            print(str(e.weight()))
+
+    def test_edgesNeighbourRep(self):
+        G = Base.Graph(weighted = True, representation = Base.Graph.NEIGHBOUR)
+        n1, n2, n3, n4, n5 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
+        G.add(n1, n2, 3)
+        G.add(n2, n3, 31)
+        G.add(n3, n4, 7)
+        G.add(n3, n5, 2)
+        G.add(n5, n2, 1)
+        self.assertEqual(len(G.edges()), 5)
+
+    def test_MST(self):
+        with self.assertRaises(Base.GraphException):
+            G = Base.Graph(MST = True)
+        with self.assertRaises(Base.GraphException):
+            G = Base.Graph(MST = True, weighted = True, directed = True)
+
+        #edge-rep
+        G = Base.Graph(weighted = True, MST = True)
+        n1, n2, n3, n4, n5, n6, n7 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
+        G.add(n1, n2, 7)
+        G.add(n1, n4, 5)
+        G.add(n2, n3, 8)
+        G.add(n2, n4, 9)
+        G.add(n2, n5, 7)
+        G.add(n3, n5, 5)
+        G.add(n4, n5, 15)
+        G.add(n4, n6, 6)
+        G.add(n5, n6, 8)
+        G.add(n5, n7, 9)
+        G.add(n6, n7, 11)
+
+        MST = G.MST()
+
+        self.assertEqual(MST.numEdges(), 6)
+        self.assertEqual(MST.weighted(), True)
+        self.assertEqual(MST.directed(), False)
+        #do edges add up to minimum weight?
+        sum = 0
+        for edge in MST.edges():
+            sum += edge.weight() 
+        self.assertEqual(sum, 39)
+        #is it connected?
+        MST.setTraversal(Base.Graph.DFS)
+        #pick any startNode
+        startNode = MST.nodes()[0]
+        for node in MST.nodes():  
+            #can we reach all nodes from this node?
+            if node is startNode: continue
+            self.assertEqual(MST.search(startNode, node), True)
+
+        #neighbour-rep
+        G = Base.Graph(weighted = True, MST = True, representation = Base.Graph.NEIGHBOUR)
+        G.add(n1, n2, 7)
+        G.add(n1, n4, 5)
+        G.add(n2, n3, 8)
+        G.add(n2, n4, 9)
+        G.add(n2, n5, 7)
+        G.add(n3, n5, 5)
+        G.add(n4, n5, 15)
+        G.add(n4, n6, 6)
+        G.add(n5, n6, 8)
+        G.add(n5, n7, 9)
+        G.add(n6, n7, 11)
+
+        MST = G.MST()
+        self.assertEqual(MST.numEdges(), 6)
+        self.assertEqual(MST.weighted(), True)
+        self.assertEqual(MST.directed(), False)
+        #do edges add up to minimum weight?
+        sum = 0
+        for edge in MST.edges():
+            sum += edge.weight() 
+        self.assertEqual(sum, 39)
+        #is it connected?
+        MST.setTraversal(Base.Graph.DFS)
+        #pick any startNode
+        startNode = MST.nodes()[0]
+        for node in MST.nodes():  
+            #can we reach all nodes from this node?
+            if node is startNode: continue
+            self.assertEqual(MST.search(startNode, node), True)
+
+    def test_SSSP(self):
+        with self.assertRaises(Base.GraphException):
+            G = Base.Graph(SSSP = True)
+        with self.assertRaises(Base.GraphException):
+            G = Base.Graph(SSSP = True, weighted = True, directed = False)
+
+        self._SSSP(Base.Graph.EDGE)
+        self._SSSP(Base.Graph.NEIGHBOUR)
+
+    def _SSSP(self, repr):
+        G = Base.Graph(weighted = True, SSSP = True, directed = True, representation = repr)
+        n0, n1, n2, n3, n4, n5, n6 = Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node(), Base.Node()
+        
+        G.add(n0, n1, 5)
+        G.add(n1, n0, 1)
+        G.add(n0, n2, 20)
+        G.add(n0, n3, 3)
+        G.add(n2, n4, 6)
+        G.add(n2, n3, 15)
+        G.add(n3, n4, 1)
+        G.add(n4, n5, 3)
+        G.add(n4, n6, 12)
+        G.add(n5, n6, 3)
+
+        SSSP = G.SSSP(n0)
+        self.assertEqual(len(SSSP.nodes()), 7)
+        self.assertEqual(SSSP.numEdges(), 6)
+        self.assertEqual(SSSP.weighted(), True)
+        self.assertEqual(SSSP.directed(), True)
+        #do edges add up to correct weight?
+        sum = 0
+        for edge in SSSP.edges():
+            sum += edge.weight() 
+        self.assertEqual(sum, 35)
+        #is it connected?
+        SSSP.setTraversal(Base.Graph.DFS)
+        startNode = n0
+        for node in SSSP.nodes():  
+            #can we reach all nodes from this node?
+            if node is startNode: continue
+            self.assertEqual(SSSP.search(startNode, node), True)
+
+        #check other startnode
+        SSSP = G.SSSP(n3)
+        self.assertEqual(len(SSSP.nodes()), 4)
+        self.assertEqual(SSSP.numEdges(), 3)
+        self.assertEqual(SSSP.weighted(), True)
+        self.assertEqual(SSSP.directed(), True)
+        #do edges add up to correct weight?
+        sum = 0
+        for edge in SSSP.edges():
+            sum += edge.weight() 
+        self.assertEqual(sum, 7)
+        #is it connected?
+        SSSP.setTraversal(Base.Graph.DFS)
+        startNode = n3
+        for node in SSSP.nodes():  
+            #can we reach all nodes from this node?
+            if node is startNode: continue
+            self.assertEqual(SSSP.search(startNode, node), True)
+
       # ---------------%<------------------
       # End of my tests
       #    
 if __name__ == '__main__':
     unittest.main()
+
