@@ -1,0 +1,131 @@
+Similarity Analyser 2.5.8 - http://www.harukizaemon.com/simian
+Copyright (c) 2003-2017 Simon Harris.  All rights reserved.
+Simian is not free unless used solely for non-commercial or evaluation purposes.
+{failOnDuplication=true, ignoreCharacterCase=true, ignoreCurlyBraces=true, ignoreIdentifierCase=true, ignoreModifiers=true, ignoreStringCase=true, reportDuplicateText=true, threshold=6}
+Found 6 duplicate lines with fingerprint 6b83d6e81bd59f6c827c5f78b870e0fc in the following files:
+ Between lines 812 and 817 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 788 and 793 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+        G.add(n1, n2)
+        G.add(n2, n3)
+        G.add(n3, n4)
+        G.add(n5, n6)
+        G.add(n6, n7)
+        G.add(n7, n8)
+=====================================================================
+Found 7 duplicate lines with fingerprint 0606236082ac8ef84b585174abc1fbc0 in the following files:
+ Between lines 592 and 598 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 613 and 619 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+      G.add(n1, n2)
+      G.add(n1, n3)
+      G.add(n1, n4)
+      G.add(n1, n5)
+      G.add(n5, n6)
+      G.add(n5, n7)
+      G.add(n5, n8)
+=====================================================================
+Found 7 duplicate lines with fingerprint cd68c4ee7d211720c441e01e8396cd2d in the following files:
+ Between lines 635 and 641 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 667 and 673 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 692 and 698 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+      G.add(n2, n3)
+      G.add(n2, n4)
+      G.add(n2, n5)
+      G.add(n6, n5)
+      G.add(n5, n7)
+      G.add(n5, n8)
+      print(G.DOTprint())
+=====================================================================
+Found 9 duplicate lines with fingerprint a98ca2131976d5ab042d8aca1acd59fb in the following files:
+ Between lines 797 and 808 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 819 and 830 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+        self.assertEqual(G.search(n1, n4), True)
+        self.assertEqual(G.search(n5, n8), True)
+        self.assertEqual(G.search(n1, n5), False)
+        self.assertEqual(G.search(n3, n7), False)
+
+        #DFS - neigh-rep
+        G.setTraversal(Base.Graph.DFS)
+        #test search
+        self.assertEqual(G.search(n1, n4), True)
+        self.assertEqual(G.search(n5, n8), True)
+        self.assertEqual(G.search(n1, n5), False)
+        self.assertEqual(G.search(n3, n7), False)
+=====================================================================
+Found 13 duplicate lines with fingerprint d459a68ce302037ad139a58386faf387 in the following files:
+ Between lines 634 and 646 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 666 and 678 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+      G.add(n1, n2)
+      G.add(n2, n3)
+      G.add(n2, n4)
+      G.add(n2, n5)
+      G.add(n6, n5)
+      G.add(n5, n7)
+      G.add(n5, n8)
+      print(G.DOTprint())
+      self.assertEqual(G.DOTprint(), "digraph g{\nnode[label=\"\"]; \n" \
+               "0 -> 1\n" \
+               "1 -> 2\n" \
+               "1 -> 3\n" \
+               "1 -> 4\n" \
+=====================================================================
+Found 15 duplicate lines with fingerprint 90c4a7ebf0a2bfbf21b58b8f89942399 in the following files:
+ Between lines 843 and 862 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 873 and 892 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+        G.add(n7, n8)
+        G.add(n9, n9)
+        
+        #test search
+        self.assertEqual(G.search(n1, n4), True)
+        self.assertEqual(G.search(n3, n1), False)
+        self.assertEqual(G.search(n4, n8), True)
+        self.assertEqual(G.search(n1, n8), True)
+        self.assertEqual(G.search(n1, n9), False)
+        self.assertEqual(G.search(n9, n9), True)
+
+        #DFS - neigh-rep
+        G.setTraversal(Base.Graph.DFS)
+        #test search
+        self.assertEqual(G.search(n1, n4), True)
+        self.assertEqual(G.search(n3, n1), False)
+        self.assertEqual(G.search(n4, n8), True)
+        self.assertEqual(G.search(n1, n8), True)
+        self.assertEqual(G.search(n1, n9), False)
+        self.assertEqual(G.search(n9, n9), True)
+=====================================================================
+Found 24 duplicate lines with fingerprint ded4c27cf21d093d34b7fa36c92989b6 in the following files:
+ Between lines 953 and 981 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+ Between lines 920 and 949 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.py
+        G.add(n1, n2, 7)
+        G.add(n1, n4, 5)
+        G.add(n2, n3, 8)
+        G.add(n2, n4, 9)
+        G.add(n2, n5, 7)
+        G.add(n3, n5, 5)
+        G.add(n4, n5, 15)
+        G.add(n4, n6, 6)
+        G.add(n5, n6, 8)
+        G.add(n5, n7, 9)
+        G.add(n6, n7, 11)
+
+        MST = G.MST()
+
+        self.assertEqual(MST.numEdges(), 6)
+        self.assertEqual(MST.weighted(), True)
+        self.assertEqual(MST.directed(), False)
+        #do edges add up to minimum weight?
+        sum = 0
+        for edge in MST.edges():
+            sum += edge.weight() 
+        self.assertEqual(sum, 39)
+        #is it connected?
+        MST.setTraversal(Base.Graph.DFS)
+        #pick any startNode
+        startNode = MST.nodes()[0]
+        for node in MST.nodes():  
+            #can we reach all nodes from this node?
+            if node is startNode: continue
+            self.assertEqual(MST.search(startNode, node), True)
+=====================================================================
+Found 155 duplicate lines in 13 blocks in 1 files
+Processed a total of 792 significant (1050 raw) lines in 1 files
+Processing time: 0.100sec

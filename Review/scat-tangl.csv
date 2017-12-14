@@ -1,0 +1,7 @@
+Features;Graph;Node;Neighbour;WeightedNeighbour;Edge;WeightedEdge
+EdgeList;1;0;0;0;1;0
+NeighbourList;1;1;1;0;0;0
+Directed;1;0;0;0;0;0
+Undirected;1;0;0;0;0;0
+Weight;1;0;0;1;0;1
+DOT;1;0;0;0;0;0

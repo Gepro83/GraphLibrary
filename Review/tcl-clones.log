@@ -1,0 +1,222 @@
+Similarity Analyser 2.5.8 - http://www.harukizaemon.com/simian
+Copyright (c) 2003-2017 Simon Harris.  All rights reserved.
+Simian is not free unless used solely for non-commercial or evaluation purposes.
+{failOnDuplication=true, ignoreCharacterCase=true, ignoreCurlyBraces=true, ignoreIdentifierCase=true, ignoreModifiers=true, ignoreStringCase=true, reportDuplicateText=true, threshold=6}
+Found 6 duplicate lines with fingerprint 310f227dd6b9b91114f8074086425717 in the following files:
+ Between lines 1046 and 1051 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 1023 and 1028 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+		$G add $n1 $n2
+		$G add $n2 $n3
+		$G add $n3 $n4
+		$G add $n5 $n6
+		$G add $n6 $n7
+		$G add $n7 $n8
+=====================================================================
+Found 6 duplicate lines with fingerprint acbda160e303a20570570a41bd804afe in the following files:
+ Between lines 1123 and 1128 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 1071 and 1076 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 1014 and 1019 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 859 and 864 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 750 and 755 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 718 and 723 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+    	set n1 [::Base::Node new]
+    	set n2 [::Base::Node new]
+    	set n3 [::Base::Node new]
+    	set n4 [::Base::Node new]
+    	set n5 [::Base::Node new]
+    	set n6 [::Base::Node new]
+=====================================================================
+Found 6 duplicate lines with fingerprint b5c86d8971dfbc0bbf5eec68669bdf6f in the following files:
+ Between lines 1016 and 1021 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 861 and 866 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 803 and 808 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 752 and 757 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 720 and 725 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+    	set n3 [::Base::Node new]
+    	set n4 [::Base::Node new]
+    	set n5 [::Base::Node new]
+    	set n6 [::Base::Node new]
+    	set n7 [::Base::Node new]
+    	set n8 [::Base::Node new]
+=====================================================================
+Found 7 duplicate lines with fingerprint 4d79b55fb9fbe797cef68aa77fe8797f in the following files:
+ Between lines 729 and 735 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 761 and 767 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+    	$G add $n1 $n2
+    	$G add $n1 $n3
+    	$G add $n1 $n4
+    	$G add $n1 $n5
+    	$G add $n5 $n6
+    	$G add $n5 $n7
+    	$G add $n5 $n8
+=====================================================================
+Found 7 duplicate lines with fingerprint 0ea5070c3bf5117490ac9b88fabde4d5 in the following files:
+ Between lines 718 and 724 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 750 and 756 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 859 and 865 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 1014 and 1020 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 1071 and 1077 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+		set n1 [::Base::Node new]
+    	set n2 [::Base::Node new]
+    	set n3 [::Base::Node new]
+    	set n4 [::Base::Node new]
+    	set n5 [::Base::Node new]
+    	set n6 [::Base::Node new]
+    	set n7 [::Base::Node new]
+=====================================================================
+Found 7 duplicate lines with fingerprint aeed0336f858f7c811f1bf5a6de5a582 in the following files:
+ Between lines 970 and 978 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 987 and 995 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+		set n0 [::Base::Node new]
+    	set n1 [::Base::Node new]
+		set n2 [::Base::Node new]
+
+		$G add $n0 $n1 3
+		$G add $n0 $n2 2
+		$G add $n1 $n2 5
+
+		set edge [$G edge $n0 $n1]
+=====================================================================
+Found 7 duplicate lines with fingerprint 81c8ba7415dd288e50679607b520ab6a in the following files:
+ Between lines 412 and 418 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 424 and 430 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ 						if {${:weighted}} {
+ 							append DOTstring [: -local singleDOTedge $node \
+ 							[$neighbour opposite get] [$neighbour weight get]]
+ 						} else {
+ 							append DOTstring [: -local singleDOTedge $node [$neighbour opposite get]]
+ 						}
+ 					}
+=====================================================================
+Found 8 duplicate lines with fingerprint c0621e6d385196e77c550025851ca4ab in the following files:
+ Between lines 178 and 185 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 65 and 72 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 207 and 214 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 197 and 204 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 161 and 168 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 151 and 158 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 141 and 148 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 107 and 114 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+			:public object method value=set {obj prop value} {
+				if {![$obj eval [list info exists :$prop]]} {
+					set r [next]
+				} else {
+					set r [:value=get $obj $prop]
+				}
+				return $r
+			}
+=====================================================================
+Found 8 duplicate lines with fingerprint 6c665501d69153d82704f9ad7b37bfc7 in the following files:
+ Between lines 1014 and 1021 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 859 and 866 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 750 and 757 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 718 and 725 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+    	set n1 [::Base::Node new]
+    	set n2 [::Base::Node new]
+    	set n3 [::Base::Node new]
+    	set n4 [::Base::Node new]
+    	set n5 [::Base::Node new]
+    	set n6 [::Base::Node new]
+    	set n7 [::Base::Node new]
+    	set n8 [::Base::Node new]
+=====================================================================
+Found 9 duplicate lines with fingerprint 62395938f21a8f2d30ff81ead6c8410d in the following files:
+ Between lines 65 and 73 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 178 and 186 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 141 and 149 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 151 and 159 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 161 and 169 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 197 and 205 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 207 and 215 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+			:public object method value=set {obj prop value} {
+				if {![$obj eval [list info exists :$prop]]} {
+					set r [next]
+				} else {
+					set r [:value=get $obj $prop]
+				}
+				return $r
+				} 
+		}
+=====================================================================
+Found 9 duplicate lines with fingerprint d262f9ceace6eabc114315f39c49ecd4 in the following files:
+ Between lines 1154 and 1162 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 1177 and 1185 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+		set nodeCounter 0
+		foreach node [$sssp nodes get] {
+			#can we reach all nodes from this node?
+			if {$node eq $startNode} { continue }
+			if {[$sssp search $startNode $node]} {
+				incr nodeCounter
+			}
+		}
+		append result $nodeCounter
+=====================================================================
+Found 10 duplicate lines with fingerprint e58c96f9a5c78caf65fcd22f56cc95b5 in the following files:
+ Between lines 1166 and 1175 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 1143 and 1152 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+		append result [$sssp numEdges]
+		append result [$sssp weighted get]
+		append result [$sssp directed get]
+		#do edges add up to correct weight?
+		set sum 0
+		foreach edge [$sssp edges get] {
+			incr sum [$edge weight get]
+		}
+		append result $sum
+		#is it connected?
+=====================================================================
+Found 10 duplicate lines with fingerprint f6ad101bc42e8d3d52cee1022eae3c80 in the following files:
+ Between lines 701 and 712 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 685 and 696 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+    	set n1 [::Base::Node new]
+    	set n2 [::Base::Node new]
+    	set n3 [::Base::Node new]
+    	set n4 [::Base::Node new]
+    	
+    	set G [::Base::Graph new]
+    	
+    	$G add $n1 $n2
+    	$G add $n2 $n1
+    	$G add $n2 $n3
+    	$G add $n3 $n4
+    	$G add $n3 $n2
+=====================================================================
+Found 12 duplicate lines with fingerprint 2f43cb0e78719ad0079fb76d6a13fab6 in the following files:
+ Between lines 175 and 186 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 62 and 73 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+	    		}
+	    		return
+			}
+			:public object method value=set {obj prop value} {
+				if {![$obj eval [list info exists :$prop]]} {
+					set r [next]
+				} else {
+					set r [:value=get $obj $prop]
+				}
+				return $r
+			}
+		}
+=====================================================================
+Found 15 duplicate lines with fingerprint 39ccd41e42344ade5fd52217d0e71006 in the following files:
+ Between lines 811 and 826 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+ Between lines 869 and 884 in C:\Users\Arbeit\Google Drive\Uni\Master\Dynamic Programming Techniques\simian-2.5.8\bin\gpl.tcl
+    	$G add $n1 $n2 1
+    	$G add $n2 $n3 4
+    	$G add $n2 $n4 5
+    	$G add $n2 $n5 1
+    	$G add $n6 $n5 10
+    	$G add $n5 $n7 2
+    	$G add $n5 $n8 7
+		
+		set result [catch {$G add $n3 $n2}]
+    	append result [$G DOTprint]
+	} -result {1digraph g{
+node[label=""];
+0 -> 1 [ label = "1" ];
+1 -> 2 [ label = "4" ];
+1 -> 3 [ label = "5" ];
+1 -> 4 [ label = "1" ];
+=====================================================================
+Found 270 duplicate lines in 31 blocks in 1 files
+Processed a total of 1086 significant (1207 raw) lines in 1 files
+Processing time: 0.099sec
